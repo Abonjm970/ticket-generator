@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تذكرة الدخول</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      margin: 10px 0;
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: right;
+    }
+    button {
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .ticket {
+      margin-top: 30px;
+      background: #fff;
+      padding: 20px;
+      border: 2px dashed #333;
+      width: 300px;
+      text-align: center;
+      border-radius: 12px;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <h1>تذكرة الدخول</h1>
+  <form id="ticketForm">
+    <input type="text" id="name" placeholder="اكتب اسمك" required><br>
+    <input type="text" id="team" placeholder="اكتب اسم فريقك" required><br>
+    <button type="submit">إنشاء التذكرة</button>
+  </form>
+
+  <div id="ticket" class="ticket" style="display: none;"></div>
+  <button id="downloadBtn" style="display: none;">تحميل التذكرة كصورة</button>
+
+  <!-- مكتبة html2canvas لتحويل العنصر إلى صورة -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    const form = document.getElementById('ticketForm');
+    const ticketDiv = document.getElementById('ticket');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const team = document.getElementById('team').value.trim();
+
+      if (name && team) {
+        const serial = Math.floor(100000 + Math.random() * 900000); // رقم تسلسلي
+        ticketDiv.innerHTML = `
+          🎟️ <strong>تذكرة دخول</strong><br><br>
+          الاسم: ${name}<br>
+          الفريق: ${team}<br>
+          الرقم التسلسلي: ${serial}
+        `;
+        ticketDiv.style.display = 'block';
+        downloadBtn.style.display = 'inline-block';
+      }
+    });
+
+    downloadBtn.addEventListener('click', function() {
+      html2canvas(ticketDiv).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'ticket.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    });
+  </script>
+</body>
+</html>
